@@ -1,12 +1,19 @@
-﻿namespace ConsultorioDental.API.Models
-{
-    public class Dentista
-    {
-        public int DentistaId { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public string Especialidad { get; set; } = string.Empty;
+﻿using ConsultorioDental.API.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-        // Lista de citas relacionadas
-        public List<Cita>? Citas { get; set; }
-    }
+public class Dentista
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int DentistaId { get; set; }
+
+    [Required]
+    public string Nombre { get; set; } = string.Empty;
+
+    [Required]
+    public string Especialidad { get; set; } = string.Empty;
+
+    public List<Cita>? Citas { get; set; }
 }
+

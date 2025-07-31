@@ -38,13 +38,17 @@ namespace ConsultorioDental.API.Controllers
 
         // POST: api/Pacientes
         [HttpPost]
-        public async Task<ActionResult<Paciente>> PostPaciente(Paciente paciente)
+        public async Task<IActionResult> Post([FromBody] Paciente paciente)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             _context.Pacientes.Add(paciente);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPaciente), new { id = paciente.PacienteId }, paciente);
+            return Ok(paciente);
         }
+
 
         // PUT: api/Pacientes/5
         [HttpPut("{id}")]

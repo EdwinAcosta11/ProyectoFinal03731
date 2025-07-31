@@ -46,16 +46,17 @@ namespace ConsultorioDental.API.Controllers
 
         // POST: api/Citas
         [HttpPost]
-        public async Task<ActionResult<Cita>> PostCita(Cita cita)
+        public async Task<IActionResult> Post([FromBody] Cita cita)
         {
-            // Calcular estado en base a fecha y hora actual
-            cita.Estado = CalcularEstado(cita.Fecha, cita.Hora, cita.Duracion);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             _context.Citas.Add(cita);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCita), new { id = cita.CitaId }, cita);
+            return Ok(cita);
         }
+
 
         // PUT: api/Citas/5
         [HttpPut("{id}")]
