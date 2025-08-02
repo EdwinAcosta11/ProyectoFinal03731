@@ -29,9 +29,7 @@ namespace ConsultorioDental.API.Controllers
             var paciente = await _context.Pacientes.FindAsync(id);
 
             if (paciente == null)
-            {
                 return NotFound();
-            }
 
             return paciente;
         }
@@ -46,18 +44,18 @@ namespace ConsultorioDental.API.Controllers
             _context.Pacientes.Add(paciente);
             await _context.SaveChangesAsync();
 
-            return Ok(paciente);
+            return CreatedAtAction(nameof(GetPaciente), new { id = paciente.PacienteId }, paciente);
         }
-
 
         // PUT: api/Pacientes/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPaciente(int id, Paciente paciente)
+        public async Task<IActionResult> PutPaciente(int id, [FromBody] Paciente paciente)
         {
             if (id != paciente.PacienteId)
-            {
-                return BadRequest();
-            }
+                return BadRequest("El ID enviado no coincide con el del cuerpo.");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             _context.Entry(paciente).State = EntityState.Modified;
 
@@ -68,13 +66,9 @@ namespace ConsultorioDental.API.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!_context.Pacientes.Any(e => e.PacienteId == id))
-                {
                     return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return NoContent();
@@ -86,9 +80,7 @@ namespace ConsultorioDental.API.Controllers
         {
             var paciente = await _context.Pacientes.FindAsync(id);
             if (paciente == null)
-            {
                 return NotFound();
-            }
 
             _context.Pacientes.Remove(paciente);
             await _context.SaveChangesAsync();
@@ -97,3 +89,4 @@ namespace ConsultorioDental.API.Controllers
         }
     }
 }
+
